@@ -71,6 +71,7 @@ app.get('/', (req, res) => {
               roll: tds.eq(0).text().trim(),
               id_no: tds.eq(1).text().trim(),
               name: tds.eq(2).text().trim(),
+              developer:"SIAM RAHMAN"
             };
             data_list.push(data);
           }
