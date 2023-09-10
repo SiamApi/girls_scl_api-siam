@@ -1,7 +1,6 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { group } = require('console');
 
 const app = express();
 const port = 3000;
@@ -15,20 +14,26 @@ app.get('/', (req, res) => {
   const sessionId = '2';
   const shift = req.query.shift;
 
+  // Check if group and shift parameters are missing
+  if (!group || !shift) {
+    return res.status(400).json({ error: 'Please enter both group and shift parameters.' });
+  }
+
   // Define the mapping for shift values
   const shiftMappings = {
     morning: 1,
-    day: 2, // You can use any value for mixed case
+    day: 2,
   };
-  const groupMAPING = {
-    scince: 1,
+
+  const groupMappings = {
+    science: 1,
     arts: 2,
-    commerce:3
-  }
+    commerce: 3,
+  };
 
   // Determine the shift ID based on the shift query parameter
   const shiftId = shiftMappings[shift.toLowerCase()] || '';
-  const grpid = groupMAPING[group.toLowerCase()] || '';
+  const groupId = groupMappings[group.toLowerCase()] || '';
 
   // If shiftId is not found, it defaults to an empty string
 
@@ -38,7 +43,7 @@ app.get('/', (req, res) => {
   // Define the payload (data) for the POST request
   const payload = new URLSearchParams({
     class_id: classId,
-    department_id: grpid,
+    department_id: groupId,
     session_id: sessionId,
     shift: shiftId,
   });
@@ -71,7 +76,7 @@ app.get('/', (req, res) => {
               roll: tds.eq(0).text().trim(),
               id_no: tds.eq(1).text().trim(),
               name: tds.eq(2).text().trim(),
-              developer:"SIAM RAHMAN"
+              developer: "SIAM RAHMAN",
             };
             data_list.push(data);
           }
